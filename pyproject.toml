@@ -1,0 +1,17 @@
+[project]
+name = "order-inventory-mgmt"
+version = "0.1.0"
+description = "Order and Inventory Management API"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.162.1",
+    "pydantic-settings>=2.16.2",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.4",
+]
