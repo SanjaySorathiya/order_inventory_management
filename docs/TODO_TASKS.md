@@ -13,12 +13,14 @@
 
 ### T01 - Day 1: Define the capstone and prepare the environment
 
-- [ ] Review Python type hints, decorators, context managers, generators, and HTTP methods/status codes; list any prerequisite gaps.
-- [ ] Define User, InventoryItem, Order, and OrderItem entities, their relationships, and the permitted order status transitions.
-- [ ] Define business rules: positive quantities, nonnegative stock, unique item identifiers, server-calculated totals, insufficient-stock behavior, and who may read or modify each resource.
-- [ ] Write an endpoint contract covering login, inventory listing/detail/administration, order creation/detail, health checks, and order tracking.
-- [ ] Create a Python virtual environment and a reproducible dependency manifest; separate application and development dependencies.
-- [ ] Add environment-based configuration and an example environment file without real credentials; document setup commands in a README.
+- [x] Review Python type hints, decorators, context managers, generators, and HTTP methods/status codes; list any prerequisite gaps.
+- [x] Define User, InventoryItem, Order, and OrderItem entities, their relationships, and the permitted order status transitions.
+- [x] Define business rules: positive quantities, nonnegative stock, unique item identifiers, server-calculated totals, insufficient-stock behavior, and who may read or modify each resource.
+- [x] Write an endpoint contract covering login, inventory listing/detail/administration, order creation/detail, health checks, and order tracking.
+- [x] Create a Python virtual environment and a reproducible dependency manifest; separate application and development dependencies.
+- [x] Add environment-based configuration and an example environment file without real credentials; document setup commands in a README.
+
+**T01 complete:** All six items are documented in [T01_D1.md](T01_D1.md). Python 3.13/uv, separate dependency groups, the lockfile, [Windows PowerShell and Linux/macOS Bash/zsh setup instructions](../README.md#development-setup), and validated environment configuration are ready. Five configuration tests and Ruff lint/format checks pass. Continue with T02.
 
 **Deliverable:** An agreed API contract and a reproducible local development environment.
 
