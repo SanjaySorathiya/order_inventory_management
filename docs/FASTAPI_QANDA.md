@@ -1,11 +1,13 @@
 # FastAPI Interview Q&A: Quick Revision
 
 - Project: Order & Inventory Management API
-- Updated: 2026-11-07
-- Coverage: T01 and the setup discussions completed so far.
+- Updated: 2026-11-08
+- Coverage: T01 setup and the completed T02 runtime skeleton.
 
 Use each short answer as a starting point for a 30-60 second explanation.
-The project currently has environment configuration and configuration tests.
+The project has environment configuration, a running ASGI app, and six tests
+covering configuration and health. See [T02 runtime revision](T02_D2.md) for
+framework comparisons, execution models, and the request-flow diagram.
 Orders, database transactions, authentication, and tracking below are agreed
 design decisions; their implementations belong to later tasks.
 
@@ -231,14 +233,14 @@ Plain Uvicorn supports basic polling of Python-file changes with `--reload`.
 With watchfiles installed, reload supports richer include/exclude file patterns.
 Installing standard alone does not turn reload on; the flag still controls it.
 
-An illustrative future launch command is:
+The current development launch command is:
 
 ~~~sh
 uv run --locked uvicorn app.main:app --reload
 ~~~
 
-It means import `app` from the module `app.main`. It will work only after T02
-creates that ASGI application; the present root `main.py` is a learning script.
+It means import `app` from the module `app.main`. T02 provides that ASGI
+application and `GET /health`; the root `main.py` remains a learning script.
 The launch syntax is unchanged by installing extras.
 See [Uvicorn reload options](https://uvicorn.dev/settings/#development).
 
@@ -377,11 +379,15 @@ See [Uvicorn configuration](https://uvicorn.dev/settings/#configuration-methods)
 
 There are five configuration cases: defaults with no dotenv file, process values
 overriding dotenv values, and rejection of an invalid environment, an invalid
-boolean, and a blank name. They do not prove checkout or authentication works.
+boolean, and a blank name. T02 adds a synchronous TestClient smoke test for
+the health status, JSON content type, and exact payload: six passing cases in
+total. They do not prove checkout or authentication works.
 
 pytest runs tests; HTTPX supports HTTP-client/API-test work; Ruff lints and formats
-code. The current configuration tests do not need a running HTTP server.
-See [test_config.py](../tests/test_config.py).
+code. Neither the configuration tests nor the in-process health smoke test
+needs a listening HTTP server. See [test_config.py](../tests/test_config.py),
+[test_health.py](../tests/test_health.py), and the
+[T02 verification notes](T02_D2.md#7-completion-evidence-and-interview-recall).
 
 ### Q28. How can I verify the current setup?
 
@@ -397,7 +403,7 @@ uv run --locked ruff format --check app tests
 
 A valid lockfile, installed-package compatibility, passing tests, and clean
 lint/format results answer different questions. None alone proves the entire
-application is correct. See [setup instructions](../README.md#verification).
+application is correct. See [verification instructions](DEVELOPMENT.md#verification).
 
 ## 4. Python prerequisites
 
@@ -596,5 +602,7 @@ A4 or Letter portrait, and preview code wrapping and page breaks before saving.
 Keep source links clickable and avoid splitting question headings from answers.
 No PDF or converter installation is required at the present stage.
 
-Related project documents: [setup README](../README.md),
-[task checklist](TODO_TASKS.md), and [T01 summary](T01_D1.md).
+Related project documents: [project README](../README.md),
+[development guide](DEVELOPMENT.md),
+[task checklist](TODO_TASKS.md), [T01 summary](T01_D1.md), and
+[T02 runtime revision](T02_D2.md).

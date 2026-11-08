@@ -20,18 +20,20 @@
 - [x] Create a Python virtual environment and a reproducible dependency manifest; separate application and development dependencies.
 - [x] Add environment-based configuration and an example environment file without real credentials; document setup commands in a README.
 
-**T01 complete:** All six items are documented in [T01_D1.md](T01_D1.md). Python 3.13/uv, separate dependency groups, the lockfile, [Windows PowerShell and Linux/macOS Bash/zsh setup instructions](../README.md#development-setup), and validated environment configuration are ready. Five configuration tests and Ruff lint/format checks pass. Continue with T02.
+**T01 complete:** All six items are documented in [T01_D1.md](T01_D1.md). Python 3.13/uv, separate dependency groups, the lockfile, [Windows PowerShell and Linux/macOS Bash/zsh setup instructions](DEVELOPMENT.md#development-setup), and validated environment configuration are ready. Five configuration tests and Ruff lint/format checks pass. Continue with T02.
 
 **Deliverable:** An agreed API contract and a reproducible local development environment.
 
 ### T02 - Day 2: Understand the runtime and scaffold a working app
 
-- [ ] Explain the responsibilities of FastAPI, Starlette, Pydantic, and an ASGI server; compare FastAPI with Flask and Django.
-- [ ] Diagram a request from server through middleware, routing, dependencies, validation, handler execution, serialization, and response.
-- [ ] Compare ASGI and WSGI capabilities, concurrency versus parallelism, and event-loop versus thread/process execution without assuming every server uses the same model.
-- [ ] Create the application layout: `app/main.py`, `api/deps.py`, `api/v1/`, `core/`, `models/`, `schemas/`, a service layer, `tests/`, and `exercises/`.
-- [ ] Start a minimal app with Uvicorn, add a health endpoint, and inspect `/docs`, `/redoc`, and `/openapi.json`.
-- [ ] Configure pytest and add a synchronous `TestClient` smoke test for the health endpoint.
+- [x] Explain the responsibilities of FastAPI, Starlette, Pydantic, and an ASGI server; compare FastAPI with Flask and Django.
+- [x] Diagram a request from server through middleware, routing, dependencies, validation, handler execution, serialization, and response.
+- [x] Compare ASGI and WSGI capabilities, concurrency versus parallelism, and event-loop versus thread/process execution without assuming every server uses the same model.
+- [x] Create the application layout: `app/main.py`, `api/deps.py`, `api/v1/`, `core/`, `models/`, `schemas/`, a service layer, `tests/`, and `exercises/`.
+- [x] Start a minimal app with Uvicorn, add a health endpoint, and inspect `/docs`, `/redoc`, and `/openapi.json`.
+- [x] Configure pytest and add a synchronous `TestClient` smoke test for the health endpoint.
+
+**T02 complete:** See [T02_D2.md](T02_D2.md) for interview revision explanations, comparison tables, the request-flow diagram, scaffold layout, and verification evidence. The public health endpoint and generated documentation respond through Uvicorn; all six current tests and Ruff checks pass. Readiness remains planned. Continue with T03.
 
 **Deliverable:** A running skeleton, a passing smoke test, and a runtime architecture diagram.
 
