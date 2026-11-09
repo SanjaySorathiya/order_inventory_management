@@ -1,4 +1,4 @@
-﻿# TODO Tasks: Order & Inventory Management API
+# TODO Tasks: Order & Inventory Management API
 
 ## How to use this checklist
 
@@ -39,12 +39,14 @@
 
 ### T03 - Day 3: Build modular routes and parameter validation
 
-- [ ] Create and register versioned auth, inventory, and order routers using `APIRouter`, prefixes, and tags.
-- [ ] Practice GET, POST, PUT, PATCH, and DELETE; distinguish full replacement, partial updates, and deletion semantics.
-- [ ] Add typed path parameters and `Path()` constraints for resource identifiers.
-- [ ] Add required and optional query parameters; distinguish a missing default from an explicitly nullable value.
-- [ ] Implement validated filtering, sorting, and bounded pagination for inventory lookups using `Query()`.
-- [ ] Test invalid identifiers, query bounds, missing required parameters, and static-versus-dynamic route ordering.
+- [x] Create and register versioned auth, inventory, and order routers using `APIRouter`, prefixes, and tags.
+- [x] Practice GET, POST, PUT, PATCH, and DELETE; distinguish full replacement, partial updates, and deletion semantics.
+- [x] Add typed path parameters and `Path()` constraints for resource identifiers.
+- [x] Add required and optional query parameters; distinguish a missing default from an explicitly nullable value.
+- [x] Implement validated filtering, sorting, and bounded pagination for inventory lookups using `Query()`.
+- [x] Test invalid identifiers, query bounds, missing required parameters, and static-versus-dynamic route ordering.
+
+**T03 complete:** See [T03_D3.md](T03_D3.md) for main-API inventory CRUD, temporary per-app storage, versioned routers, parameter exercises, and verification. All 129 tests and Ruff checks pass. Persistence, authentication, and order workflows remain scheduled for later tasks. Continue with T04.
 
 **Deliverable:** Modular routes with predictable parameter binding and validation behavior.
 
@@ -290,4 +292,3 @@
 - [ ] Add a shared event transport for multi-worker order tracking and document its delivery semantics.
 - [ ] Add the second real-time transport and compare its operational behavior.
 - [ ] Add CI and a reproducible deployment package after the local setup and test suite are stable.
-

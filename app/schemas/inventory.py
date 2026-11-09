@@ -1,0 +1,99 @@
+"""Inventory request and response contracts needed by T03 CRUD."""
+
+from datetime import datetime
+from typing import Annotated, Literal, Self
+
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+
+MAX_INT64 = 2**63 - 1
+Name = Annotated[
+    str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)
+]
+Sku = Annotated[
+    str,
+    StringConstraints(
+        strip_whitespace=True,
+        to_upper=True,
+        min_length=1,
+        max_length=64,
+        pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+    ),
+]
+Description = Annotated[str, Field(max_length=1000)]
+NonnegativeInt = Annotated[int, Field(strict=True, ge=0, le=MAX_INT64)]
+
+
+class InventoryReplace(BaseModel):
+    """PUT supplies every mutable field, including nullable description."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: Name
+    description: Description | None
+    unit_price_minor: NonnegativeInt
+    stock: NonnegativeInt
+    is_active: Annotated[bool, Field(strict=True)]
+
+
+class InventoryCreate(InventoryReplace):
+    """Creation adds an immutable SKU and defaults for optional fields."""
+
+    sku: Sku
+    description: Description | None = None
+    is_active: Annotated[bool, Field(strict=True)] = True
+
+
+class InventoryPatch(BaseModel):
+    """Omission preserves state; only description can explicitly be null."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: Name | None = None
+    description: Description | None = None
+    unit_price_minor: NonnegativeInt | None = None
+    stock: NonnegativeInt | None = None
+    is_active: Annotated[bool, Field(strict=True)] | None = None
+
+    @model_validator(mode="after")
+    def validate_changes(self) -> Self:
+        if not self.model_fields_set:
+            raise ValueError("PATCH must contain at least one mutable field.")
+        for field in self.model_fields_set - {"description"}:
+            if getattr(self, field) is None:
+                raise ValueError(f"{field} cannot be null.")
+        return self
+
+
+class InventoryRead(InventoryReplace):
+    """Public inventory representation; immutable within the temporary store."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    id: int
+    sku: str
+    currency: Literal["INR"] = "INR"
+    created_at: datetime
+    updated_at: datetime
+
+
+class InventoryPage(BaseModel):
+    """Count is measured after filtering and before pagination."""
+
+    items: list[InventoryRead]
+    total: int
+    limit: int
+    offset: int
+
+
+class InventoryQuery(BaseModel):
+    """Query strings use literal true/false rather than permissive bool coercion."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    limit: int = Field(default=20, ge=1, le=100)
+    offset: int = Field(default=0, ge=0)
+    q: Name | None = None
+    in_stock: Literal["true", "false"] | None = None
+    sort: Literal["id", "name", "unit_price_minor"] = "id"
+    direction: Literal["asc", "desc"] = "asc"
+    include_inactive: Literal["true", "false"] = "false"

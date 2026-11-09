@@ -116,7 +116,9 @@ This Bash/zsh form leaves the shell's existing environment unchanged afterward.
 `get_settings()` caches its result per process. Restart a running process after
 changing settings; tests clear the cache when changing the environment.
 The environment label does not automatically change other settings: selecting
-production does not by itself configure deployment or authentication.
+production does not by itself configure deployment or authentication. During T03,
+production disables temporary unauthenticated inventory writes with 501 responses;
+development/test allow local CRUD. Inactive access awaits admin authentication.
 
 Commit `.env.example`, `pyproject.toml`, `.python-version`, and `uv.lock`.
 Keep `.env`, other local dotenv variants, credentials, and `.venv` out of Git.
@@ -131,8 +133,8 @@ These commands work in Windows PowerShell and Linux/macOS Bash or zsh:
 uv lock --check --offline
 uv pip check
 uv run --locked python -m pytest -q
-uv run --locked ruff check app tests
-uv run --locked ruff format --check app tests
+uv run --locked ruff check app tests exercises
+uv run --locked ruff format --check app tests exercises
 ~~~
 
 The configuration tests verify defaults without a dotenv file, process-variable
@@ -141,8 +143,10 @@ The synchronous health smoke test checks the status, JSON media type, and exact
 payload using an isolated application and explicit test settings. Pytest
 configuration in `pyproject.toml` limits default collection to `tests/`.
 
-Recorded results and the current Starlette/HTTPX deprecation warning are in the
-[T02 verification notes](T02_D2.md#7-completion-evidence-and-interview-recall).
+The T03 suite also covers inventory CRUD, parameter/query validation, router
+registration, safe errors, app isolation, and route ordering. Current results
+(129 passing tests) and the existing Starlette/HTTPX warning are in the
+[T03 verification notes](T03_D3.md#8-verification-and-completion-evidence).
 
 ## API documentation
 
