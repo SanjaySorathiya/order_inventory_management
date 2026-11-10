@@ -1,7 +1,8 @@
 # Order & Inventory Management API
 
 A FastAPI capstone for inventory, transactional orders, authentication, and
-order tracking. T03 is complete: the main API supports inventory CRUD,
+order tracking. T04 is complete: isolated request-format exercises and the
+initial HTTP response contract are covered. The main API supports inventory CRUD,
 filtering, sorting, and pagination with temporary in-memory storage.
 See the [task checklist](docs/TODO_TASKS.md) for later stages.
 
@@ -57,6 +58,18 @@ The root URL / returns 404. The entry point is app.main:app.
 The [T03 guide](docs/T03_D3.md#7-run-and-demonstrate-the-main-api) contains a
 complete PowerShell CRUD demonstration and isolated parameter exercises.
 
+## Request-format exercises
+
+Run T04 separately from the main API:
+
+~~~sh
+uv run --locked uvicorn exercises.t04_requests:app --host 127.0.0.1 --port 8002 --reload
+~~~
+
+Visit http://127.0.0.1:8002/docs for headers, cookies, JSON/forms, controlled
+.txt uploads up to 2 MiB, and HTTPException examples. See the
+[T04 guide](docs/T04_D4.md) for examples and the HTTP response contract.
+
 ## Verification
 
 ~~~sh
@@ -66,8 +79,8 @@ uv run --locked ruff format --check app tests exercises
 ~~~
 
 See the [verification guide](docs/DEVELOPMENT.md#verification) for setup checks
-and [T03 evidence](docs/T03_D3.md#8-verification-and-completion-evidence) for
-the 129 passing tests and existing Starlette/HTTPX deprecation warning.
+and [T04 evidence](docs/T04_D4.md#7-verification-and-completion-evidence) for
+the 169 passing tests and existing Starlette/HTTPX deprecation warning.
 
 ## Documentation
 
@@ -78,5 +91,6 @@ the 129 passing tests and existing Starlette/HTTPX deprecation warning.
 | [Domain and API contract](docs/T01_D1.md) | Agreed final entities, endpoints, and rules. |
 | [Runtime architecture](docs/T02_D2.md) | Frameworks, execution models, and request flow. |
 | [T03 routes and CRUD](docs/T03_D3.md) | Current behavior, parameter validation, and examples. |
+| [T04 inputs and HTTP](docs/T04_D4.md) | Headers, cookies, forms/uploads, cleanup, and HTTP contracts. |
 | [Interview revision](docs/FASTAPI_QANDA.md) | Quick questions and answers. |
 | [Exercises](exercises/README.md) | Isolated experiments and commands. |

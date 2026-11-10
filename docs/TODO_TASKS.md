@@ -52,12 +52,14 @@
 
 ### T04 - Day 4: Handle special inputs and establish HTTP error contracts
 
-- [ ] Practice `Header()` and `Cookie()`; demonstrate how Python parameter underscores map to HTTP header hyphens.
-- [ ] Handle form submissions with `Form()` and install the multipart dependency needed for form/file exercises.
-- [ ] Implement a controlled `UploadFile` exercise with size/type checks and cleanup; explain in-memory spooling and rollover to disk.
-- [ ] Distinguish JSON request bodies from form and multipart payloads.
-- [ ] Establish success/error status codes, including 201 for creation, 204 with no response body, 404 for missing resources, and 409 for business conflicts.
-- [ ] Raise `HTTPException` for expected failures and test its status, detail, and optional headers.
+- [x] Practice `Header()` and `Cookie()`; demonstrate how Python parameter underscores map to HTTP header hyphens.
+- [x] Handle form submissions with `Form()` and install the multipart dependency needed for form/file exercises.
+- [x] Implement a controlled `UploadFile` exercise with size/type checks and cleanup; explain in-memory spooling and rollover to disk.
+- [x] Distinguish JSON request bodies from form and multipart payloads.
+- [x] Establish success/error status codes, including 201 for creation, 204 with no response body, 404 for missing resources, and 409 for business conflicts.
+- [x] Raise `HTTPException` for expected failures and test its status, detail, and optional headers.
+
+**T04 complete:** See [T04_D4.md](T04_D4.md) for isolated header/cookie/form/JSON/upload exercises, temporary-file cleanup and spooling evidence, and the initial HTTP contract. The multipart dependency is locked; all 169 tests and Ruff checks pass. Continue with T05.
 
 **Deliverable:** Request-format exercises and an initial, documented HTTP response contract.
 
