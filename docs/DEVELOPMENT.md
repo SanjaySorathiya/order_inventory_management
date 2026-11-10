@@ -143,10 +143,12 @@ The synchronous health smoke test checks the status, JSON media type, and exact
 payload using an isolated application and explicit test settings. Pytest
 configuration in `pyproject.toml` limits default collection to `tests/`.
 
-The T03 suite also covers inventory CRUD, parameter/query validation, router
-registration, safe errors, app isolation, and route ordering. Current results
-(129 passing tests) and the existing Starlette/HTTPX warning are in the
-[T03 verification notes](T03_D3.md#8-verification-and-completion-evidence).
+The suite also covers inventory CRUD, parameter/query validation, router
+registration, safe errors, app isolation, and route ordering. T04 adds request
+formats, headers/cookies, upload size/type/content checks, genuine temporary-file
+spooling/cleanup, and HTTP response contracts. Current results (169 passing
+tests) and the existing Starlette/HTTPX warning are in the
+[T04 verification notes](T04_D4.md#7-verification-and-completion-evidence).
 
 ## API documentation
 

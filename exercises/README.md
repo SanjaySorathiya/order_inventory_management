@@ -32,3 +32,36 @@ uv run --locked python -m pytest tests/test_t03_parameters.py -q
 ~~~
 
 See [T03 notes](../docs/T03_D3.md) for explanations and main API examples.
+
+## T04: Special inputs, uploads, and HTTP errors
+
+~~~sh
+uv run --locked uvicorn exercises.t04_requests:app --host 127.0.0.1 --port 8002 --reload
+~~~
+
+Open http://127.0.0.1:8002/docs.
+
+| Route | Demonstration |
+| --- | --- |
+| GET /headers-cookies | Header underscore/hyphen conversion, case-insensitivity, and Cookie() binding. |
+| POST /json | Required message in a JSON document. |
+| POST /form | Required message in a URL-encoded or multipart text field. |
+| POST /upload | Exactly one file and label, temporary text inspection. |
+| GET /errors/rate-limited | HTTPException 429, structured detail, and Retry-After: 60. |
+
+Upload one nonempty UTF-8 .txt file with declared type text/plain, at most
+2 MiB (2,097,152 bytes), and a label of 1-80 characters. Wrong type returns 415,
+oversize returns 413, and missing/repeated fields or invalid text return 422.
+Files are closed on success and rejection, including disk-spooled uploads;
+nothing is retained. The handler's byte limit applies after multipart parsing.
+
+The 429 route is an unconditional error demonstration. The main API continues
+to demonstrate creation (201 with Location), deletion (empty 204), missing
+inventory (404), and duplicate SKU conflicts (409).
+
+~~~sh
+uv run --locked python -m pytest tests/test_t04_requests.py tests/test_http_contract.py -q
+~~~
+
+See [T04 notes](../docs/T04_D4.md) for the HTTP contract, spooling/cleanup
+explanation, runnable PowerShell and Bash/zsh examples, and verification.
