@@ -65,14 +65,15 @@
 
 ### T05 - Day 5: Design Pydantic v2 domain schemas
 
-- [ ] Create separate create, update, and read schemas for inventory and orders, including nested order lines.
-- [ ] Define user/login input and public user output schemas; keep password hashes and internal fields out of public models.
-- [ ] Apply `Field()` constraints for identifiers, quantities, lengths, and monetary values; choose an explicit money representation.
-- [ ] Decide where coercion is acceptable and where strict validation or rejection of extra fields is required.
-- [ ] Configure models with `ConfigDict`; prepare ORM-compatible read schemas where needed.
+- [x] Create separate create, update, and read schemas for inventory and orders, including nested order lines.
+- [x] Define user/login input and public user output schemas; keep password hashes and internal fields out of public models.
+- [x] Apply `Field()` constraints for identifiers, quantities, lengths, and monetary values; choose an explicit money representation.
+- [x] Decide where coercion is acceptable and where strict validation or rejection of extra fields is required.
+- [x] Configure models with `ConfigDict`; prepare ORM-compatible read schemas where needed.
+
+**T05 complete:** See [T05_D5.md](T05_D5.md) for the schema contracts, validation policy, ORM-read configuration, and reusable static credential verifier. Authentication token issuance and persisted-user verification remain in T15.
 
 **Deliverable:** Typed, separated input/output contracts for the domain.
-
 ### T06 - Day 6: Implement validators and study validation failures
 
 - [ ] Add `@field_validator` for field normalization and `@model_validator` for cross-field rules.
