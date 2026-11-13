@@ -3,7 +3,14 @@
 from datetime import datetime
 from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    field_validator,
+    model_validator,
+)
 
 MAX_INT64 = 2**63 - 1
 Name = Annotated[
@@ -24,6 +31,11 @@ NonnegativeInt = Annotated[int, Field(strict=True, ge=0, le=MAX_INT64)]
 PositiveId = Annotated[int, Field(strict=True, gt=0, le=MAX_INT64)]
 
 
+def collapse_inner_whitespace(value: str) -> str:
+    """Collapse internal whitespace runs after Name has stripped the ends."""
+    return " ".join(value.split())
+
+
 class InventoryReplace(BaseModel):
     """PUT supplies every mutable field, including nullable description."""
 
@@ -33,6 +45,11 @@ class InventoryReplace(BaseModel):
     unit_price_minor: NonnegativeInt
     stock: NonnegativeInt
     is_active: Annotated[bool, Field(strict=True)]
+
+    @field_validator("name")
+    @classmethod
+    def normalize_name(cls, value: str) -> str:
+        return collapse_inner_whitespace(value)
 
 
 class InventoryCreate(InventoryReplace):
@@ -52,6 +69,13 @@ class InventoryPatch(BaseModel):
     unit_price_minor: NonnegativeInt | None = None
     stock: NonnegativeInt | None = None
     is_active: Annotated[bool, Field(strict=True)] | None = None
+
+    @field_validator("name")
+    @classmethod
+    def normalize_name(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return collapse_inner_whitespace(value)
 
     @model_validator(mode="after")
     def validate_changes(self) -> Self:

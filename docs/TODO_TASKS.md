@@ -76,12 +76,14 @@
 **Deliverable:** Typed, separated input/output contracts for the domain.
 ### T06 - Day 6: Implement validators and study validation failures
 
-- [ ] Add `@field_validator` for field normalization and `@model_validator` for cross-field rules.
-- [ ] Define how duplicate order lines are handled and validate empty orders, invalid quantities, and inconsistent input.
-- [ ] Use `model_dump()`, including `exclude_unset=True` where appropriate for PATCH; explain the corresponding Pydantic v1 patterns.
-- [ ] Trigger and inspect structured 422 responses, including error locations and messages.
-- [ ] Keep database-dependent rules, such as stock availability and uniqueness conflicts, in the service/transaction layer.
-- [ ] Add targeted schema tests for valid, invalid, coercible, and strict inputs.
+- [x] Add `@field_validator` for field normalization and `@model_validator` for cross-field rules.
+- [x] Define how duplicate order lines are handled and validate empty orders, invalid quantities, and inconsistent input.
+- [x] Use `model_dump()`, including `exclude_unset=True` where appropriate for PATCH; explain the corresponding Pydantic v1 patterns.
+- [x] Trigger and inspect structured 422 responses, including error locations and messages.
+- [x] Keep database-dependent rules, such as stock availability and uniqueness conflicts, in the service/transaction layer.
+- [x] Add targeted schema tests for valid, invalid, coercible, and strict inputs.
+
+**T06 complete:** See [T06_D6.md](T06_D6.md) for duplicate-line merging, the 1-100 line and 10,000 per-line quantity limits, inventory name normalization, PATCH `exclude_unset` semantics, Pydantic v1 equivalents, and structured 422 examples. All 24 T06 tests and the full suite pass; Ruff lint passes. Continue with T07.
 
 **Deliverable:** Validated domain inputs with observable and tested failure cases.
 

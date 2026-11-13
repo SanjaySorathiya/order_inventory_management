@@ -4,11 +4,12 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.schemas.inventory import MAX_INT64, Name, PositiveId, Sku
 
-Quantity = Annotated[int, Field(strict=True, ge=1, le=10_000)]
+MAX_LINE_QUANTITY = 10_000
+Quantity = Annotated[int, Field(strict=True, ge=1, le=MAX_LINE_QUANTITY)]
 MoneyMinor = Annotated[int, Field(strict=True, ge=0, le=MAX_INT64)]
 
 
@@ -31,10 +32,39 @@ class OrderLineCreate(BaseModel):
 
 
 class OrderCreate(BaseModel):
-    """Checkout input contains 1-100 lines and no client-controlled totals."""
+    """Checkout input contains 1-100 lines and no client-controlled totals.
+
+    Repeated inventory items are merged into the first occurrence, preserving
+    request order. A merged quantity above MAX_LINE_QUANTITY is rejected rather
+    than silently truncated.
+    """
 
     model_config = ConfigDict(extra="forbid")
     items: list[OrderLineCreate] = Field(min_length=1, max_length=100)
+
+    @field_validator("items", mode="after")
+    @classmethod
+    def merge_duplicate_lines(
+        cls, lines: list[OrderLineCreate]
+    ) -> list[OrderLineCreate]:
+        """Field-level so a rejected total is reported at loc ("items",)."""
+        merged: dict[int, int] = {}
+        for line in lines:
+            merged[line.inventory_item_id] = (
+                merged.get(line.inventory_item_id, 0) + line.quantity
+            )
+
+        for item_id, total in merged.items():
+            if total > MAX_LINE_QUANTITY:
+                raise ValueError(
+                    f"Combined quantity for inventory_item_id {item_id} exceeds "
+                    f"{MAX_LINE_QUANTITY}."
+                )
+
+        return [
+            OrderLineCreate(inventory_item_id=item_id, quantity=total)
+            for item_id, total in merged.items()
+        ]
 
 
 class OrderStatusUpdate(BaseModel):
