@@ -39,7 +39,20 @@ def collapse_inner_whitespace(value: str) -> str:
 class InventoryReplace(BaseModel):
     """PUT supplies every mutable field, including nullable description."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "name": "Keyboard",
+                    "description": "Compact layout",
+                    "unit_price_minor": 12500,
+                    "stock": 3,
+                    "is_active": True,
+                }
+            ]
+        },
+    )
     name: Name
     description: Description | None
     unit_price_minor: NonnegativeInt
@@ -55,6 +68,20 @@ class InventoryReplace(BaseModel):
 class InventoryCreate(InventoryReplace):
     """Creation adds an immutable SKU and defaults for optional fields."""
 
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "sku": "KB-001",
+                    "name": "Keyboard",
+                    "description": None,
+                    "unit_price_minor": 12500,
+                    "stock": 5,
+                    "is_active": True,
+                }
+            ]
+        },
+    )
     sku: Sku
     description: Description | None = None
     is_active: Annotated[bool, Field(strict=True)] = True
@@ -63,7 +90,10 @@ class InventoryCreate(InventoryReplace):
 class InventoryPatch(BaseModel):
     """Omission preserves state; only description can explicitly be null."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={"examples": [{"stock": 3}, {"description": None}]},
+    )
     name: Name | None = None
     description: Description | None = None
     unit_price_minor: NonnegativeInt | None = None
@@ -90,7 +120,27 @@ class InventoryPatch(BaseModel):
 class InventoryRead(InventoryReplace):
     """Public inventory representation compatible with ORM attributes."""
 
-    model_config = ConfigDict(extra="forbid", frozen=True, from_attributes=True)
+    model_config = ConfigDict(
+        extra="forbid",
+        frozen=True,
+        from_attributes=True,
+        json_schema_extra={
+            "examples": [
+                {
+                    "id": 1,
+                    "sku": "KB-001",
+                    "name": "Keyboard",
+                    "description": "Compact layout",
+                    "unit_price_minor": 12500,
+                    "stock": 3,
+                    "is_active": True,
+                    "currency": "INR",
+                    "created_at": "2026-11-14T10:00:00Z",
+                    "updated_at": "2026-11-14T10:00:00Z",
+                }
+            ]
+        },
+    )
     id: PositiveId
     sku: Sku
     currency: Literal["INR"] = "INR"
@@ -101,7 +151,32 @@ class InventoryRead(InventoryReplace):
 class InventoryPage(BaseModel):
     """Count is measured after filtering and before pagination."""
 
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "items": [
+                        {
+                            "id": 1,
+                            "sku": "KB-001",
+                            "name": "Keyboard",
+                            "description": "Compact layout",
+                            "unit_price_minor": 12500,
+                            "stock": 3,
+                            "is_active": True,
+                            "currency": "INR",
+                            "created_at": "2026-11-14T10:00:00Z",
+                            "updated_at": "2026-11-14T10:00:00Z",
+                        }
+                    ],
+                    "total": 1,
+                    "limit": 20,
+                    "offset": 0,
+                }
+            ]
+        },
+    )
     items: list[InventoryRead]
     total: int
     limit: int

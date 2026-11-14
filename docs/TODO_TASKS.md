@@ -89,12 +89,14 @@
 
 ### T07 - Day 7: Enforce output filtering and review Week 1
 
-- [ ] Apply `response_model` to public endpoints and verify nested output serialization.
-- [ ] Demonstrate that password hashes, internal flags, and private metadata are excluded from responses.
-- [ ] Test the difference between invalid client input and an invalid server response.
-- [ ] Add endpoint summaries, descriptions, examples, response codes, and tags to the generated API documentation.
-- [ ] Check the implemented schemas and routes against the endpoint contract.
-- [ ] Explain request binding, validation, response filtering, and ASGI/WSGI trade-offs aloud.
+- [x] Apply `response_model` to public endpoints and verify nested output serialization.
+- [x] Demonstrate that password hashes, internal flags, and private metadata are excluded from responses.
+- [x] Test the difference between invalid client input and an invalid server response.
+- [x] Add endpoint summaries, descriptions, examples, response codes, and tags to the generated API documentation.
+- [x] Check the implemented schemas and routes against the endpoint contract.
+- [x] Explain request binding, validation, response filtering, and ASGI/WSGI trade-offs aloud.
+
+**T07 complete:** See [T07_D7.md](T07_D7.md) for `response_model` decisions, the response-filtering and invalid-response experiments in `exercises/t07_response_filtering.py`, the OpenAPI documentation changes, the contract gap table, and the Week 1 gate review. The full suite passes with 240 tests, and Ruff lint and format checks pass. The rehearsal paragraphs are written in T07_D7.md section 6; say them aloud once before relying on them. Week 1 is complete; continue with T08.
 
 **Week 1 gate:** The skeleton runs, request/schema exercises pass, sensitive fields are filtered, and the API contract is documented.
 
