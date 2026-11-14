@@ -65,3 +65,29 @@ uv run --locked python -m pytest tests/test_t04_requests.py tests/test_http_cont
 
 See [T04 notes](../docs/T04_D4.md) for the HTTP contract, spooling/cleanup
 explanation, runnable PowerShell and Bash/zsh examples, and verification.
+
+## T07: Response filtering and invalid server responses
+
+~~~sh
+uv run --locked uvicorn exercises.t07_response_filtering:app --port 8003 --reload
+~~~
+
+Open http://127.0.0.1:8003/docs.
+
+| Route | Demonstration |
+| --- | --- |
+| GET /t07/users/{user_id} | Internal record filtered through the public UserRead schema; password_hash, is_active, and support_note are absent. |
+| GET /t07/orders/{order_id} | Nested OrderRead filtering; line cost_minor and order fraud_score are absent. |
+| POST /t07/users/validate | Invalid body returns 422 (client error); valid body returns 200. |
+| GET /t07/users-leaky | Intentionally broken: returns a dict with password_hash. The forbidden extra key causes a 500 (server error). |
+| GET /t07/users-incomplete | Intentionally broken: omits a required field and returns a 500. |
+
+The two broken routes exist only to show invalid server responses. Use the
+`/t07/users/validate` route to compare them with a client error.
+
+~~~sh
+uv run --locked python -m pytest tests/test_t07_response_filtering.py tests/test_t07_contract.py -q
+~~~
+
+See [T07 notes](../docs/T07_D7.md) for the filtering mechanics, the OpenAPI
+contract review, and the Week 1 gate.

@@ -1,4 +1,4 @@
-"""Working inventory CRUD and validated catalog queries for T03."""
+"""Working inventory CRUD and validated catalog queries for T03 and T07."""
 
 from typing import Annotated
 
@@ -25,8 +25,65 @@ ItemId = Annotated[int, Path(gt=0, le=MAX_INT64)]
 Store = Annotated[InventoryStore, Depends(get_inventory_store)]
 learning_write = [Depends(require_learning_environment)]
 
+NOT_FOUND = {
+    "description": "No active inventory item has this identifier.",
+    "content": {
+        "application/json": {
+            "example": {
+                "detail": {
+                    "code": "inventory_item_not_found",
+                    "message": "Inventory item was not found.",
+                }
+            }
+        }
+    },
+}
+NOT_READY = {
+    "description": (
+        "Inventory administration is disabled in production until T15-T16 "
+        "authentication exists."
+    ),
+    "content": {
+        "application/json": {
+            "example": {
+                "detail": {
+                    "code": "inventory_administration_not_ready",
+                    "message": "Inventory administration requires T15-T16 authentication.",
+                }
+            }
+        }
+    },
+}
+DUPLICATE_SKU = {
+    "description": "Another inventory item already uses this SKU.",
+    "content": {
+        "application/json": {
+            "example": {
+                "detail": {
+                    "code": "duplicate_sku",
+                    "message": "An inventory item already uses this SKU.",
+                }
+            }
+        }
+    },
+}
 
-@router.get("", dependencies=[Depends(reject_repeated_query_parameters)])
+
+@router.get(
+    "",
+    response_model=InventoryPage,
+    summary="List active inventory",
+    description=(
+        "Filters, sorts, and paginates active items. Requesting "
+        "`include_inactive=true` is refused until admin authentication exists (T16)."
+    ),
+    responses={
+        403: {
+            "description": "Inactive inventory was requested without admin authentication.",
+        }
+    },
+    dependencies=[Depends(reject_repeated_query_parameters)],
+)
 def list_inventory(
     query: Annotated[InventoryQuery, Query()], store: Store
 ) -> InventoryPage:
@@ -42,12 +99,29 @@ def list_inventory(
     return store.list(query)
 
 
-@router.get("/{item_id}")
+@router.get(
+    "/{item_id}",
+    response_model=InventoryRead,
+    summary="Get one active inventory item",
+    description="Returns the public representation of an active item by ID.",
+    responses={404: NOT_FOUND},
+)
 def read_inventory(item_id: ItemId, store: Store) -> InventoryRead:
     return store.read(item_id)
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, dependencies=learning_write)
+@router.post(
+    "",
+    status_code=status.HTTP_201_CREATED,
+    response_model=InventoryRead,
+    summary="Create an inventory item",
+    description=(
+        "Creates an item with an immutable SKU. Returns 201 with a `Location` "
+        "header. Disabled in production until authentication exists."
+    ),
+    responses={409: DUPLICATE_SKU, 501: NOT_READY},
+    dependencies=learning_write,
+)
 def create_inventory(
     body: InventoryCreate, response: Response, store: Store
 ) -> InventoryRead:
@@ -56,7 +130,17 @@ def create_inventory(
     return item
 
 
-@router.put("/{item_id}", dependencies=learning_write)
+@router.put(
+    "/{item_id}",
+    response_model=InventoryRead,
+    summary="Replace an inventory item",
+    description=(
+        "Replaces every mutable field of an existing item. Never creates an item; "
+        "SKU and identifiers are immutable."
+    ),
+    responses={404: NOT_FOUND, 501: NOT_READY},
+    dependencies=learning_write,
+)
 def replace_inventory(
     item_id: ItemId, body: InventoryReplace, store: Store
 ) -> InventoryRead:
@@ -64,7 +148,17 @@ def replace_inventory(
     return store.update(item_id, body)
 
 
-@router.patch("/{item_id}", dependencies=learning_write)
+@router.patch(
+    "/{item_id}",
+    response_model=InventoryRead,
+    summary="Update selected inventory fields",
+    description=(
+        "Changes only supplied fields. Explicit `null` clears only `description`; "
+        "an empty body is rejected with 422."
+    ),
+    responses={404: NOT_FOUND, 501: NOT_READY},
+    dependencies=learning_write,
+)
 def patch_inventory(
     item_id: ItemId, body: InventoryPatch, store: Store
 ) -> InventoryRead:
@@ -76,6 +170,12 @@ def patch_inventory(
     "/{item_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     response_class=Response,
+    summary="Deactivate an inventory item",
+    description=(
+        "Deactivates the item while preserving its SKU and stock. Returns an empty "
+        "204 response; repeated calls are idempotent."
+    ),
+    responses={404: NOT_FOUND, 501: NOT_READY},
     dependencies=learning_write,
 )
 def delete_inventory(item_id: ItemId, store: Store) -> Response:
