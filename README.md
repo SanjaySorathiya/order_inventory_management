@@ -70,6 +70,19 @@ Visit http://127.0.0.1:8002/docs for headers, cookies, JSON/forms, controlled
 .txt uploads up to 2 MiB, and HTTPException examples. See the
 [T04 guide](docs/T04_D4.md) for examples and the HTTP response contract.
 
+## T08 concurrency exercise
+
+Run the isolated async/sync demonstration separately:
+
+~~~sh
+uv run --locked uvicorn exercises.t08_concurrency:app --host 127.0.0.1 --port 8004 --reload
+uv run --locked python exercises/t08_concurrency.py
+uv run --locked python -m pytest tests/test_t08_concurrency.py -q
+~~~
+
+See [T08 notes](docs/T08_D8.md) for execution mechanics, the concurrent probe,
+baseline evidence, and CPU/process trade-offs.
+
 ## Verification
 
 ~~~sh
@@ -92,5 +105,6 @@ the 169 passing tests and existing Starlette/HTTPX deprecation warning.
 | [Runtime architecture](docs/T02_D2.md) | Frameworks, execution models, and request flow. |
 | [T03 routes and CRUD](docs/T03_D3.md) | Current behavior, parameter validation, and examples. |
 | [T04 inputs and HTTP](docs/T04_D4.md) | Headers, cookies, forms/uploads, cleanup, and HTTP contracts. |
+| [T08 concurrency](docs/T08_D8.md) | Async/sync execution paths and a repeatable concurrency probe. |
 | [Interview revision](docs/FASTAPI_QANDA.md) | Quick questions and answers. |
 | [Exercises](exercises/README.md) | Isolated experiments and commands. |
