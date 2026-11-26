@@ -91,3 +91,29 @@ uv run --locked python -m pytest tests/test_t07_response_filtering.py tests/test
 
 See [T07 notes](../docs/T07_D7.md) for the filtering mechanics, the OpenAPI
 contract review, and the Week 1 gate.
+
+## T08: Async and synchronous execution
+
+~~~sh
+uv run --locked uvicorn exercises.t08_concurrency:app --host 127.0.0.1 --port 8004 --reload
+~~~
+
+Open http://127.0.0.1:8004/docs or run the concurrency probe directly:
+
+~~~sh
+uv run --locked python exercises/t08_concurrency.py
+uv run --locked python -m pytest tests/test_t08_concurrency.py -q
+~~~
+
+| Route | Demonstration |
+| --- | --- |
+| GET /t08/async-sleep | An `async def` handler awaits `asyncio.sleep()` on the event loop. |
+| GET /t08/sync-sleep | An ordinary `def` handler is dispatched to an AnyIO worker thread. |
+| GET /t08/async-inline-blocking | A synchronous helper called directly inside `async def` runs inline on the event loop. |
+| GET /t08/slow | A configurable async I/O-style wait used by the concurrent probe. |
+| GET /t08/health | A fast response used to observe health responsiveness during slow requests. |
+
+The probe concurrently sends matching counts of slow and health requests and
+reports elapsed time, throughput, status codes, average latency, and p95 latency.
+Results are environment baselines, not claims that `async` always improves
+throughput.

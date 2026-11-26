@@ -104,11 +104,16 @@
 
 ### T08 - Day 8: Compare asynchronous and synchronous execution
 
-- [ ] Build isolated `async def` and `def` route exercises and observe event-loop versus AnyIO worker-thread execution.
-- [ ] Explain that ordinary synchronous helper calls inside an async handler are not automatically moved to a worker thread.
-- [ ] Compare cooperative I/O concurrency with CPU-bound work and multi-process parallelism.
-- [ ] Run a repeatable concurrent-request experiment against a slow route and a health route.
-- [ ] Record baseline latency and throughput observations without assuming that adding `async` automatically improves performance.
+- [x] Build isolated `async def` and `def` route exercises and observe event-loop versus AnyIO worker-thread execution.
+- [x] Explain that ordinary synchronous helper calls inside an async handler are not automatically moved to a worker thread.
+- [x] Compare cooperative I/O concurrency with CPU-bound work and multi-process parallelism.
+- [x] Run a repeatable concurrent-request experiment against a slow route and a health route.
+- [x] Record baseline latency and throughput observations without assuming that adding `async` automatically improves performance.
+
+**T08 complete:** See [T08_D8.md](T08_D8.md) for the isolated async/sync
+exercise, execution-path explanation, concurrent in-process probe, and baseline
+latency/throughput evidence. The T08 test module and full suite pass, and Ruff
+lint and format checks pass. Continue with T09.
 
 **Deliverable:** A reproducible concurrency experiment with an explanation of its execution paths.
 
