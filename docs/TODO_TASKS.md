@@ -119,11 +119,13 @@ lint and format checks pass. Continue with T09.
 
 ### T09 - Day 9: Diagnose event-loop starvation
 
-- [ ] Reproduce diagnostic scenario 1 by placing a blocking call inside an isolated async route.
-- [ ] Observe its effect on concurrent requests and health-check responsiveness.
-- [ ] Replace the call with an async-native equivalent and repeat the same experiment.
-- [ ] Repeat with `asyncio.to_thread()` or `run_in_threadpool()`; compare with a synchronous route.
-- [ ] Explain threadpool capacity limits and when CPU-intensive work belongs in a separate worker process.
+- [x] Reproduce diagnostic scenario 1 by placing a blocking call inside an isolated async route.
+- [x] Observe its effect on concurrent requests and health-check responsiveness.
+- [x] Replace the call with an async-native equivalent and repeat the same experiment.
+- [x] Repeat with `asyncio.to_thread()` or `run_in_threadpool()`; compare with a synchronous route.
+- [x] Explain threadpool capacity limits and when CPU-intensive work belongs in a separate worker process.
+
+**T09 complete:** Before/after evidence and a diagnosis of event-loop starvation are in [T09_D9.md](T09_D9.md). The isolated exercise and probe are in `exercises/t09_event_loop_starvation.py`, and the T09 test module passes with the full suite.
 
 **Deliverable:** Before/after evidence and a diagnosis of event-loop starvation.
 

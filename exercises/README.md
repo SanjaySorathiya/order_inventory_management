@@ -117,3 +117,24 @@ The probe concurrently sends matching counts of slow and health requests and
 reports elapsed time, throughput, status codes, average latency, and p95 latency.
 Results are environment baselines, not claims that `async` always improves
 throughput.
+
+## T09: Event-loop starvation
+
+~~~sh
+uv run --locked uvicorn exercises.t09_event_loop_starvation:app --host 127.0.0.1 --port 8005 --reload
+~~~
+
+Open http://127.0.0.1:8005/docs or run the four-route comparison:
+
+~~~sh
+uv run --locked python exercises/t09_event_loop_starvation.py
+uv run --locked python -m pytest tests/test_t09_event_loop_starvation.py -q
+~~~
+
+| Route | Demonstration |
+| --- | --- |
+| GET /t09/blocking-inline | An `async def` handler calls a synchronous sleep inline on the event loop. |
+| GET /t09/async-native | An `async def` handler awaits `asyncio.sleep()`. |
+| GET /t09/to-thread | An `async def` handler offloads a synchronous sleep with `asyncio.to_thread()`. |
+| GET /t09/sync | An ordinary `def` handler is dispatched to an AnyIO worker thread. |
+| GET /t09/health | A lightweight health response used to measure responsiveness. |
